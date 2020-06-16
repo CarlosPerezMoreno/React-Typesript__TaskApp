@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./App.css";
 
 type FormElement = React.FormEvent<HTMLFormElement>;
@@ -10,17 +10,30 @@ interface TaskElement {
 function App(): JSX.Element {
   const [newTask, setNewTask] = useState<string>("");
   const [taskList, setTaskList] = useState<TaskElement[]>([]);
+  const taskInput = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (event: FormElement) => {
     event.preventDefault();
     addTask(newTask);
-    console.log(taskList);
+    setNewTask("");
+    taskInput.current?.focus();
   };
 
-  const addTask = (name: string) => {
+  const addTask = (name: string): void => {
     const addingTask: TaskElement[] = [...taskList, { name, done: false }];
     setTaskList(addingTask);
-    setNewTask("");
+  };
+
+  const doneTask = (i: number): void => {
+    const taskToClose: TaskElement[] = [...taskList];
+    taskToClose[i].done = !taskToClose[i].done;
+    setTaskList(taskToClose);
+  };
+
+  const removeTask = (i: number): void => {
+    const taskToRemove: TaskElement[] = [...taskList];
+    taskToRemove.splice(i, 1);
+    setTaskList(taskToRemove);
   };
 
   return (
@@ -35,6 +48,7 @@ function App(): JSX.Element {
                   type="text"
                   onChange={(e) => setNewTask(e.target.value)}
                   value={newTask}
+                  ref={taskInput}
                   autoFocus
                 />
                 <button className="btn btn-success btn-block mt-2">Save</button>
@@ -43,7 +57,25 @@ function App(): JSX.Element {
           </div>
           {taskList.map((task: TaskElement, i: number) => (
             <div className="card card-body mt-2" key={i}>
-              <h2 style={{ textDecoration: "line-through" }}>{task.name}</h2>
+              <h2 style={{ textDecoration: task.done ? "line-through" : "" }}>
+                {task.name}
+                <div>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => doneTask(i)}
+                  >
+                    {task.done ? "Done!" : " X "}
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => removeTask(i)}
+                  >
+                    <span role="img" aria-label="emo">
+                      🗑️
+                    </span>
+                  </button>
+                </div>
+              </h2>
             </div>
           ))}
         </div>
