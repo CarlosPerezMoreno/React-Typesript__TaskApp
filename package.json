@@ -13,10 +13,10 @@
     "bootswatch": "^4.5.0",
     "css-loader": "^3.6.0",
     "mini-css-extract-plugin": "^0.9.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^9.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "sass-loader": "^8.0.2",
     "source-map-loader": "^1.0.0",
     "typescript": "^3.7.5"
